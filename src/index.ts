@@ -2,6 +2,10 @@ import { PfsClient } from './clients/pfsClient'
  
 export async function main(): Promise<void> {
     const pfsClient = new PfsClient()
+    if (!await pfsClient.checkBucketExists()){
+        await pfsClient.createBucket()
+        await pfsClient.setBucketLifecycle();
+    }
     const currentDateString = new Date().toISOString()
     console.log("Uploading");
     await pfsClient.uploadString(`TestFile-${currentDateString}`, 'This is a test file.')
@@ -13,8 +17,6 @@ export async function main(): Promise<void> {
             console.log(item.Key); // Log the file name
         });
 }
-
-
 
 main()
 
